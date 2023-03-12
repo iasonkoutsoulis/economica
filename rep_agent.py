@@ -35,12 +35,12 @@ encoder_input = keras.Input(shape=(28,28,1), name = "img") # is no. of channels
 x = keras.layers.Flatten()(encoder_input) #instead of the sequential
 
 # this is the reduction of the encoder
-encoder_output = keras.layers.Dense(64, activation="relu")(x)
+encoder_output = keras.layers.Dense(64, activation="relu")(x) # functional keras' way of taking input (is fcNN, right now)
 
 encoder = keras.Model(encoder_input, encoder_output, name="encoder")
 
 # take in the input
-decoder_input = keras.layers.Dense(784, activation="relu")(encoder_output) # this )( is a *
+decoder_input = keras.layers.Dense(784, activation="relu")(encoder_output) # this implies that the decoder input is the layer following the encoder output
 
 # push out the output
 decoder_output = keras.layers.Reshape((28, 28, 1))(decoder_input)
@@ -55,18 +55,16 @@ autoencoder.fit(x_train, x_train, epochs=3, batch_size=32, validation_split=0.1)
 #mapping features to features to get a reduced form of the problem
 
 example = encoder.predict([x_test[0].reshape(-1, 28, 28, 1)])[0]
-# print(example)
-# example.shape
-
-# plt.imshow(example.reshape(8,8), cmap="gray")
+plt.imshow(example.reshape(8, 8), cmap="gray")
 # plt.show()
 
+#original image
 plt.imshow(x_test[0], cmap="gray")
-plt.show()
+# plt.show()
 
 ae_out = autoencoder.predict([x_test[0].reshape(-1, 28, 28, 1)])[0]
 plt.imshow(ae_out, cmap="gray")
-plt.show()
+# plt.show()
 
 # So, the point of rational destruction of information is very much at 
 # play here, which makes me especially happy, because we can now model
